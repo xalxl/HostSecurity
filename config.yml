@@ -1,0 +1,67 @@
+System:
+  enable: 1
+  alias:
+    common_files: "/root/.bashrc:/root/.bash_profile:/etc/bashrc:/etc/profile" 
+    user_files: ".bashrc" # 程序自动补全 /home/{user}
+    alias_sensitive_commad: "ps,ssh,strings,netstat,find,echo,iptables,lastlog,w,who,ifconfig" # 系统敏感命令
+Account:
+  enable: 1
+  special_counts:
+    passwdpath: /etc/passwd
+    shadowpath: /etc/shadow
+  policy:
+    policyfilepath: /etc/login.defs
+    pass_max: 90
+    pass_min: 7
+    pass_len: 8
+    pass_age: 30
+  TMOUT:
+    file: /etc/profile
+    timeout: 600
+  SUDO:
+    files: "/etc/sudoers"
+File:
+  enable: 1
+  moved_file:
+    directory: / # 要扫描的目录
+    time: "2020-01-19 12:00:00" # 改动过的文件的时间范围 格式： %Y-%M-%D %h:%m:%s~%Y-%M-%D %h:%m:%s 或者 %Y-%M-%D %h:%m:%s , 不填结束时间则默认为当前前3分钟时间 
+  command_status:
+    hash_db: "./db/commandhash.txt"
+    check_dir: "/bin/:/sbin/:/usr/bin/:/usr/sbin/:/usr/local/sbin/:/usr/local/bin/" # 命令目录
+    prelink_log_path: "/var/log/prelink/prelink.log:/var/log/prelink.log" # 如果存在prelink服务，需要填写prelink服务的日志
+  system_integrity:
+    binarry_directory: "/bin/:/sbin/:/usr/bin/:/usr/sbin/:/usr/local/sbin/:/usr/local/bin/"
+    check_files: "depmod:fsck:fuser:ifconfig:ifdown:ifup:init:insmod:ip:lsmod:modinfo:modprobe:nologin:rmmod:route:rsyslogd:runlevel:sulogin:sysctl:awk:basename:bash:cat:chmod:chown:cp:cut:date:df:dmesg:echo:egrep:env:fgrep:find:grep:kill:logger:login:ls:mail:mktemp:more:mount:mv:netstat:ping:ps:pwd:readlink:rpm:sed:sh:sort:su:touch:uname:gawk:mailx:adduser:chroot:groupadd:groupdel:groupmod:grpck:lsof:pwck:sestatus:sshd:useradd:userdel:usermod:vipw:chattr:curl:diff:dirname:du:file:groups:head:id:ipcs:killall:last:lastlog:ldd:less:lsattr:md5sum:newgrp:passwd:perl:pgrep:pkill:pstree:runcon:sha1sum:sha224sum:sha256sum:sha384sum:sha512sum:size:ssh:stat:strace:strings:sudo:tail:test:top:tr:uniq:users:vmstat:w:watch:wc:wget:whereis:which:who:whoami:test"
+  tmp:
+    directory: "/tmp/:/var/tmp/:/dev/shm/"
+  user:
+    directory: "/home/:/root/"
+  hide:
+    directory: "/"
+CommandHistory:
+  enable: 1
+  files: "/root/.bash_history"
+  user_directory: "/home/"
+Process:
+  enable: 1
+  work_status:
+    max_cpu: 70 # 70%
+    max_mem: 70 # 70%
+    normal_service: "systemd|rsyslogd|mysqld|redis|apache|nginx|mongodb|docker|memcached|tomcat|jboss|java|php|python|kibana|elasticsearch"
+NetWork:
+  enable: 1
+Program:
+  enable: 1
+Backdoor:
+  enable: 1
+  configfiles: "/root/.bashrc:/root/.tcshrc:/root/.bash_profile:/root/.cshrc:/root/.tcshrc:/etc/bashrc:/etc/profile:/etc/profile.d/:/etc/csh.login:/etc/csh.cshrc"
+  homefiles: "/.bashrc:/.bash_profile:/.tcshrc:/.cshrc:/.tcshrc"
+  PATHBackdoor:
+    name: "LD_PRELOAD:LD_AOUT_PRELOAD:LD_ELF_PRELOAD:LD_LIBRARY_PATH:PROMPT_COMMAND:PATH"
+  Cron:
+    files: "/var/spool/cron/:/etc/cron.d/:/etc/cron.daily/:/etc/cron.weekly/:/etc/cron.hourly/:/etc/cron.monthly/"
+  Init: 
+    files: "/etc/init.d:/etc/rc.d/:/etc/rc.local:/usr/local/etc/rc.d:/usr/local/etc/rc.local:/etc/conf.d/local.start:/etc/inittab:/etc/systemd/system"
+  SUID:
+    directory: "/etc"
+    exclude: "pam_timestamp_check|unix_chkpwd|ping|mount|su|pt_chown|ssh-keysign|at|passwd|chsh|crontab|chfn|usernetctl|staprun|newgrp|chage|dhcp|helper|pkexec|top|Xorg|nvidia-modprobe|quota|login|security_authtrampoline|authopen|traceroute6|traceroute|ps"
